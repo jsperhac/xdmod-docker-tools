@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# update to 9.0
+# assuming the rpms are downloaded into /scratch
+yum install -y /scratch/xdmod-9.0.0-0.3.rc3.el7.noarch.rpm /scratch/xdmod-supremm-9.0.0-0.3.rc3.el7.noarch.rpm
+
 XDMOD_GIT_USER=${XDMOD_GIT_USER:-'ubccr'}
 XDMOD_GIT_BRANCH=${XDMOD_GIT_BRANCH:-'xdmod9.0'}
 

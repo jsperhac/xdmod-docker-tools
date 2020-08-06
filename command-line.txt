@@ -1,6 +1,6 @@
 # Run the Open xdmod Docker
-# modified: 3 July 20
-#   plus upgrade to 8.5.1
+# modified: 5 Aug 20
+#   plus upgrade to 9.0
 
 # you want to do something like this:
 
@@ -20,7 +20,9 @@ docker run --rm \
 	tas-tools-ext-01.ccr.xdmod.org/centos7_6-open8.5.1:latest \
 	/bin/bash
 
-# Following this, inside the Docker container, cd to /scratch and run build.sh
+# Following this, inside the Docker container, cd to /scratch and run build.sh:
+	./build.sh
+
 # Then you can run etl pipeline processes to boostrap, ingest, and aggregate
 #
 # You may need to:
