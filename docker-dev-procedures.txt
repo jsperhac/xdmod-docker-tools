@@ -1,0 +1,77 @@
+The docker deploy story
+5 Aug 20
+
+Here you are doing development.
+
+Run Docker
+----------
+
+Check for the latest base docker image (tas-tools-ext-01.ccr.xdmod.org). Here we have centos7_6-open8.5.1:latest
+
+An env file is helpful to set github user, desired branch, and upgrade/fresh install
+
+You will need port 443, 8080 is obviated:
+
+docker run --rm -h xdmod-gw --shm-size 2g --env-file /home/jsperhac/xdmod-local/scratch/jsperhac.env -it -v /home/jspe/xdmod-local/scratch:/scratch -p 3306:3306 -p 443:443 tas-tools-ext-01.ccr.xdmod.org/centos7_6-open8.5.1:latest /bin/bash
+
+Build
+----------
+
+Once you have started that Docker image, cd to /scratch and run:
+
+    ./build.sh
+
+This will do the composer install, initialize git in useful places, etc.
+
+
+Run, query
+-----------
+
+At this point you can:
+- run XDMoD in the browser (https://localhost:443)
+- query the db (MySql Workbench should connect with 172.17.0.1 or so, port 3306)
+
+
+Run etl2
+----------
+
+Then you can do stuff from etl2-notes to exercise your configs.
+
+What actions are available?
+
+    # /usr/share/xdmod/tools/etl/etl_overseer.php -l actions
+
+    where -l is "list"
+
+So: run bootstrap pipeline with gateways.bootstrap argument to create the schema and tables:
+(creats enduser, gateway, job_metadata tables)
+
+	/usr/share/xdmod/tools/etl/etl_overseer.php -p gateways.bootstrap -v debug
+
+Ingest the data:
+    # note that it's still a pipeline! use community-user var to pass the needed WHERE condition
+    # for the gateway community user
+
+    /usr/share/xdmod/tools/etl/etl_overseer.php -p gateways.ingest -d community-user=Bunting
+
+    where -p is "process-section"
+          -d is "define" which supplies a variable expected by the section
+
+Aggregate the data:
+    
+This creates and populates the day, month, quarter, year tables for the gateways realm:
+    (now that it is august I have changed the -y argument to 2020-09-01 !!
+
+    # /usr/share/xdmod/tools/etl/etl_overseer.php -m '2001-01-01' -y '2020-09-01' -p gateways.aggregate
+
+    where -p is "process-section"
+          -m is "last-modified-start-date"
+          -y is "last-modified-end-date"
+
+Restart services
+-----------------
+
+Restart all services inside the docker:
+    /root/bin/services restart
+
+
