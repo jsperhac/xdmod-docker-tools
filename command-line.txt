@@ -1,9 +1,17 @@
 # Run the Open xdmod Docker
-# modified: 5 Aug 20
 #   plus upgrade to 9.0
 
 # you want to do something like this:
 
+# IMAGE
+#
+# First, find the right image--look in our github repo for xdmod,
+# and check the Dockerfile.
+# As of Sept 2020 it's tas-tools-ext-01.ccr.xdmod.org/xdmod-9.0.0:centos7.8-0.1
+# You can run a 'docker pull' specifying this if you wish
+
+# RUN
+#
 # to run it:
 docker run --rm -h xdmod-gw --shm-size 2g --env-file /home/jsperhac/xdmod-local/scratch/jsperhac.env -it -v /home/jsperhac/xdmod-local/scratch:/scratch -p 3306:3306 -p 443:443 tas-tools-ext-01.ccr.xdmod.org/centos7_6-open8.5.1:latest /bin/bash
 
@@ -20,10 +28,14 @@ docker run --rm \
 	tas-tools-ext-01.ccr.xdmod.org/centos7_6-open8.5.1:latest \
 	/bin/bash
 
+# BUILD
+#
 # Following this, inside the Docker container, cd to /scratch and run build.sh:
 	./build.sh
 
 # Then you can run etl pipeline processes to boostrap, ingest, and aggregate
+
+# RESTART SERVICES
 #
 # You may need to:
 #   /root/bin/services restart
